@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/todo")
 public class TodoResource {
 
     private List<Todo> todos = Stream.of(
@@ -23,7 +23,7 @@ public class TodoResource {
     ).collect(Collectors.toList());
 
     @CrossOrigin
-    @GetMapping(value = "/todo")
+    @GetMapping
     public ResponseEntity<List<Todo>> getTodos(@QueryParam("limit") Integer limit) {
         if (limit != null) {
             return ResponseEntity.ok(todos.subList(0, Math.min(todos.size(), limit)));
@@ -32,13 +32,12 @@ public class TodoResource {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/todo")
+    @PostMapping
     public ResponseEntity<Todo> createTodo(@Valid @RequestBody final Todo todo,
                                            final UriComponentsBuilder ucb) {
-
         todo.setId(todos.stream().mapToLong(x -> x.getId()).max().orElse(1L) + 1);
         todos.add(todo);
-        URI uri = ucb.path("/api/todo")
+        URI uri = ucb.path("/api/todo/")
                 .path(String.valueOf(todo.getId()))
                 .build()
                 .toUri();
@@ -46,9 +45,9 @@ public class TodoResource {
     }
 
     @CrossOrigin
-    @DeleteMapping(value = "/todo/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity.HeadersBuilder<?> deleteTodo(@PathVariable final Long id) {
-        todos = todos.stream().filter(x -> x.getId() != id).collect(Collectors.toList());
+        todos.removeIf(x -> x.getId().equals(id));
         return ResponseEntity.noContent();
     }
 
