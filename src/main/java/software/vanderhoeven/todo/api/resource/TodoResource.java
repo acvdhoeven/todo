@@ -34,7 +34,7 @@ public class TodoResource {
     @CrossOrigin
     @PostMapping(value = "/todo")
     public ResponseEntity<Todo> createTodo(@Valid @RequestBody final Todo todo,
-                                           UriComponentsBuilder ucb) {
+                                           final UriComponentsBuilder ucb) {
         todo.setId(todos.stream().mapToLong(x -> x.getId()).max().orElse(1L) + 1);
         todos.add(todo);
         URI uri = ucb.path("/api/todo")
