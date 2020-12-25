@@ -46,10 +46,9 @@ public class TodoResource {
 
     @CrossOrigin
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity.HeadersBuilder<?> deleteTodo(@PathVariable final Long id) {
+    public ResponseEntity deleteTodo(@PathVariable final Long id) {
         todos.removeIf(x -> x.getId().equals(id));
-        return ResponseEntity.noContent();
+        return ResponseEntity.noContent().build();
     }
-
 
 }
